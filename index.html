@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-bs-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnimLab • Capítulos 1 & 2 — Fundamentos & Princípios Clássicos</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Fraunces:wght@500;700;900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --brand-primary: #7c6cf5;
+            --brand-primary-soft: #a598ff;
+            --brand-secondary: #f472b6;
+            --brand-accent: #22d3ee;
+            --brand-success: #34d399;
+            --brand-warning: #fbbf24;
+            --brand-danger: #f87171;
+
+            --bg-canvas: #070b14;
+            --surface-1: #111827;
+            --surface-2: #16203a;
+            --surface-3: #1e2a44;
+            --border-subtle: rgba(148, 163, 184, 0.10);
+            --border-strong: rgba(148, 163, 184, 0.22);
+
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+
+            --grad-brand: linear-gradient(135deg, #7c6cf5 0%, #f472b6 100%);
+            --grad-brand-2: linear-gradient(135deg, #f472b6 0%, #22d3ee 100%);
+
+            --shadow-md: 0 8px 24px -6px rgba(0, 0, 0, 0.5), 0 2px 6px -1px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 24px 48px -12px rgba(0, 0, 0, 0.65), 0 8px 16px -4px rgba(0, 0, 0, 0.35);
+            --shadow-glow: 0 0 0 1px rgba(124, 108, 245, 0.35), 0 12px 32px -8px rgba(124, 108, 245, 0.45);
+
+            --font-ui: 'Plus Jakarta Sans', system-ui, sans-serif;
+            --font-editorial: 'Fraunces', Georgia, serif;
+            --font-mono: 'JetBrains Mono', monospace;
+
+            --ease: cubic-bezier(0.4, 0, 0.2, 1);
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 90px;
+        }
+
+        body {
+            font-family: var(--font-ui);
+            background-color: var(--bg-canvas);
+            background-image:
+                radial-gradient(circle at 15% 0%, rgba(124, 108, 245, 0.10), transparent 42%),
+                radial-gradient(circle at 90% 90%, rgba(244, 114, 182, 0.07), transparent 45%);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-canvas);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--surface-3);
+            border-radius: 10px;
+            border: 2px solid var(--bg-canvas);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--brand-primary);
+        }
+
+        .mono {
+            font-family: var(--font-mono);
+        }
+
+        .editorial {
+            font-family: var(--font-editorial);
+            letter-spacing: -0.02em;
+        }
+
+        a:focus-visible,
+        button:focus-visible {
+            outline: 2px solid var(--brand-accent);
+            outline-offset: 3px;
+            border-radius: 6px;
+        }
+
+        /* NAVBAR */
+        .navbar-animlab {
+            background: rgba(7, 11, 20, 0.72);
+            backdrop-filter: blur(18px) saturate(140%);
+            -webkit-backdrop-filter: blur(18px) saturate(140%);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .navbar-brand-badge {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: var(--grad-brand);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            box-shadow: 0 6px 18px -4px rgba(124, 108, 245, 0.6);
+            flex-shrink: 0;
+        }
+
+        .timer-widget {
+            display: flex;
+            align-items: center;
+            gap: .65rem;
+            padding: .35rem .85rem;
+            border-radius: 999px;
+            background: var(--surface-1);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .timer-display {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--brand-warning);
+            min-width: 56px;
+            text-align: center;
+            letter-spacing: .05em;
+        }
+
+        .timer-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.18s var(--ease);
+        }
+
+        .timer-btn:hover {
+            background: var(--surface-2);
+            color: var(--text-primary);
+        }
+
+        .timer-btn-primary {
+            background: var(--grad-brand);
+            color: white;
+            box-shadow: 0 4px 12px -2px rgba(124, 108, 245, 0.5);
+        }
+
+        .timer-btn-primary:hover {
+            color: white;
+            transform: scale(1.08);
+        }
+
+        .phase-badge {
+            font-size: .68rem;
+            font-weight: 700;
+            padding: .25rem .6rem;
+            border-radius: 999px;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        /* HERO */
+        .hero-methodology {
+            position: relative;
+            padding: 2.5rem;
+            border-radius: 20px;
+            background: linear-gradient(135deg, var(--surface-2) 0%, var(--surface-1) 100%);
+            border: 1px solid var(--border-subtle);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .hero-methodology::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(circle at 90% 10%, rgba(124, 108, 245, 0.18), transparent 40%),
+                radial-gradient(circle at 10% 90%, rgba(34, 211, 238, 0.12), transparent 40%);
+            pointer-events: none;
+        }
+
+        .hero-methodology>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            padding: .4rem .9rem;
+            border-radius: 999px;
+            background: rgba(124, 108, 245, 0.12);
+            border: 1px solid rgba(124, 108, 245, 0.35);
+            color: var(--brand-primary-soft);
+            font-size: .72rem;
+            font-weight: 800;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .hero-title {
+            font-family: var(--font-editorial);
+            font-weight: 900;
+            font-size: clamp(1.85rem, 4vw, 2.85rem);
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            margin-bottom: .85rem;
+        }
+
+        .hero-title .accent {
+            background: var(--grad-brand);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-lede {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            max-width: 620px;
+        }
+
+        .cycle-card {
+            background: var(--surface-1);
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+            padding: 1.15rem;
+        }
+
+        .cycle-title {
+            font-size: .68rem;
+            font-weight: 800;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: .85rem;
+            display: flex;
+            align-items: center;
+            gap: .35rem;
+        }
+
+        .cycle-step {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: .55rem .75rem;
+            border-radius: 8px;
+            background: var(--surface-2);
+            border: 1px solid var(--border-subtle);
+            margin-bottom: .4rem;
+            font-size: .82rem;
+            transition: all 0.2s var(--ease);
+        }
+
+        .cycle-step:hover {
+            border-color: var(--border-strong);
+            transform: translateX(3px);
+        }
+
+        .cycle-step:last-child {
+            margin-bottom: 0;
+        }
+
+        .cycle-step.active {
+            background: rgba(124, 108, 245, 0.12);
+            border-color: rgba(124, 108, 245, 0.4);
+        }
+
+        .cycle-step strong {
+            font-family: var(--font-mono);
+            font-size: .78rem;
+        }
+
+        .pipeline-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            padding-top: 1.5rem;
+            margin-top: 1.5rem;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .pipeline-col {
+            padding: 1.1rem;
+            border-radius: 12px;
+            background: var(--surface-1);
+            border: 1px solid var(--border-subtle);
+            transition: all 0.25s var(--ease-out);
+        }
+
+        .pipeline-col:hover {
+            border-color: var(--border-strong);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .pipeline-col .icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            margin-bottom: .65rem;
+        }
+
+        .pipeline-col h6 {
+            font-weight: 800;
+            margin-bottom: .35rem;
+            font-size: .95rem;
+        }
+
+        .pipeline-col p {
+            color: var(--text-secondary);
+            font-size: .82rem;
+            margin: 0;
+            line-height: 1.55;
+        }
+
+        /* SECTION HEADER */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-badge {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--grad-brand);
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            box-shadow: var(--shadow-glow);
+            flex-shrink: 0;
+        }
+
+        .section-badge.chapter-2 {
+            background: var(--grad-brand-2);
+            box-shadow: 0 0 0 1px rgba(244, 114, 182, 0.35), 0 12px 32px -8px rgba(244, 114, 182, 0.45);
+        }
+
+        .section-header h4 {
+            font-family: var(--font-editorial);
+            font-weight: 700;
+            font-size: clamp(1.35rem, 2.2vw, 1.65rem);
+            margin: 0;
+            letter-spacing: -0.02em;
+        }
+
+        .section-header small {
+            display: block;
+            color: var(--text-muted);
+            font-size: .78rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: .1em;
+            margin-bottom: .1rem;
+        }
+
+        /* MODULE CARDS */
+        .module-card {
+            position: relative;
+            background: linear-gradient(180deg, var(--surface-2), var(--surface-1));
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 1.5rem;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: all 0.3s var(--ease-out);
+        }
+
+        .module-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--accent-gradient, var(--grad-brand));
+            opacity: 0;
+            transition: opacity 0.3s var(--ease);
+        }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--border-strong);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .module-card:hover::before {
+            opacity: 1;
+        }
+
+        .module-head {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .module-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            flex-shrink: 0;
+        }
+
+        .module-section {
+            font-size: .68rem;
+            font-weight: 800;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            display: block;
+            margin-bottom: .15rem;
+        }
+
+        .module-title {
+            font-family: var(--font-editorial);
+            font-weight: 700;
+            font-size: 1.12rem;
+            margin: 0;
+            line-height: 1.25;
+        }
+
+        .module-desc {
+            color: var(--text-secondary);
+            font-size: .87rem;
+            line-height: 1.65;
+            flex-grow: 1;
+            margin-bottom: 1.25rem;
+        }
+
+        .module-cta {
+            display: inline-flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: .7rem 1rem;
+            border-radius: 10px;
+            background: var(--surface-3);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            font-size: .85rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s var(--ease);
+        }
+
+        .module-cta:hover {
+            background: var(--accent-gradient, var(--grad-brand));
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 6px 16px -4px var(--accent-shadow, rgba(124, 108, 245, 0.5));
+        }
+
+        .module-cta i {
+            transition: transform 0.2s var(--ease);
+        }
+
+        .module-cta:hover i {
+            transform: translateX(4px);
+        }
+
+        .mc-primary {
+            --accent-gradient: linear-gradient(135deg, #7c6cf5, #a598ff);
+            --accent-shadow: rgba(124, 108, 245, 0.5);
+        }
+
+        .mc-primary .module-icon {
+            background: rgba(124, 108, 245, 0.18);
+            color: #a598ff;
+        }
+
+        .mc-cyan {
+            --accent-gradient: linear-gradient(135deg, #22d3ee, #67e8f9);
+            --accent-shadow: rgba(34, 211, 238, 0.5);
+        }
+
+        .mc-cyan .module-icon {
+            background: rgba(34, 211, 238, 0.18);
+            color: #67e8f9;
+        }
+
+        .mc-amber {
+            --accent-gradient: linear-gradient(135deg, #fbbf24, #fcd34d);
+            --accent-shadow: rgba(251, 191, 36, 0.5);
+        }
+
+        .mc-amber .module-icon {
+            background: rgba(251, 191, 36, 0.18);
+            color: #fcd34d;
+        }
+
+        .mc-rose {
+            --accent-gradient: linear-gradient(135deg, #f472b6, #f9a8d4);
+            --accent-shadow: rgba(244, 114, 182, 0.5);
+        }
+
+        .mc-rose .module-icon {
+            background: rgba(244, 114, 182, 0.18);
+            color: #f9a8d4;
+        }
+
+        .mc-emerald {
+            --accent-gradient: linear-gradient(135deg, #34d399, #6ee7b7);
+            --accent-shadow: rgba(52, 211, 153, 0.5);
+        }
+
+        .mc-emerald .module-icon {
+            background: rgba(52, 211, 153, 0.18);
+            color: #6ee7b7;
+        }
+
+        .mc-indigo {
+            --accent-gradient: linear-gradient(135deg, #6366f1, #818cf8);
+            --accent-shadow: rgba(99, 102, 241, 0.5);
+        }
+
+        .mc-indigo .module-icon {
+            background: rgba(99, 102, 241, 0.18);
+            color: #818cf8;
+        }
+
+        /* READING BANNER */
+        .reading-banner {
+            position: relative;
+            padding: 2rem;
+            border-radius: 18px;
+            background:
+                linear-gradient(135deg, rgba(124, 108, 245, 0.15), rgba(244, 114, 182, 0.08)),
+                var(--surface-1);
+            border: 1px solid rgba(124, 108, 245, 0.35);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin: 2rem 0;
+            transition: all 0.3s var(--ease-out);
+        }
+
+        .reading-banner:hover {
+            border-color: rgba(124, 108, 245, 0.6);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .reading-banner::before {
+            content: '📖';
+            position: absolute;
+            top: -20px;
+            right: -10px;
+            font-size: 9rem;
+            opacity: 0.06;
+            pointer-events: none;
+        }
+
+        .reading-banner.chapter-2 {
+            background:
+                linear-gradient(135deg, rgba(244, 114, 182, 0.15), rgba(34, 211, 238, 0.08)),
+                var(--surface-1);
+            border-color: rgba(244, 114, 182, 0.35);
+        }
+
+        .reading-banner.chapter-2::before {
+            content: '🎬';
+        }
+
+        .reading-banner.chapter-2:hover {
+            border-color: rgba(244, 114, 182, 0.6);
+            box-shadow: 0 0 0 1px rgba(244, 114, 182, 0.35), 0 12px 32px -8px rgba(244, 114, 182, 0.45);
+        }
+
+        .reading-banner.chapter-2 .reading-banner-kicker {
+            color: var(--brand-secondary);
+        }
+
+        .reading-banner.chapter-2 .reading-banner-cta {
+            background: var(--grad-brand-2);
+            box-shadow: 0 0 0 1px rgba(244, 114, 182, 0.35), 0 12px 32px -8px rgba(244, 114, 182, 0.45);
+        }
+
+        .reading-banner.chapter-2 .reading-banner-cta:hover {
+            box-shadow: 0 16px 32px -8px rgba(244, 114, 182, 0.6);
+        }
+
+        .reading-banner-content {
+            position: relative;
+            z-index: 1;
+            flex: 1;
+            min-width: 260px;
+        }
+
+        .reading-banner-kicker {
+            font-size: .72rem;
+            font-weight: 800;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: var(--brand-primary-soft);
+            margin-bottom: .5rem;
+        }
+
+        .reading-banner-title {
+            font-family: var(--font-editorial);
+            font-size: clamp(1.25rem, 2.2vw, 1.65rem);
+            font-weight: 700;
+            margin-bottom: .35rem;
+            line-height: 1.2;
+        }
+
+        .reading-banner-desc {
+            color: var(--text-secondary);
+            font-size: .92rem;
+            margin: 0;
+            max-width: 620px;
+        }
+
+        .reading-banner-cta {
+            position: relative;
+            z-index: 1;
+            display: inline-flex;
+            align-items: center;
+            gap: .6rem;
+            padding: .85rem 1.5rem;
+            border-radius: 12px;
+            background: var(--grad-brand);
+            color: white;
+            font-weight: 700;
+            font-size: .92rem;
+            text-decoration: none;
+            box-shadow: var(--shadow-glow);
+            transition: all 0.2s var(--ease);
+            white-space: nowrap;
+        }
+
+        .reading-banner-cta:hover {
+            transform: translateY(-2px);
+            color: white;
+            box-shadow: 0 16px 32px -8px rgba(124, 108, 245, 0.6);
+        }
+
+        /* CHAPTER DIVIDER */
+        .chapter-divider {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            margin: 3.5rem 0 2.5rem;
+            padding-top: 2rem;
+            border-top: 1px dashed var(--border-strong);
+        }
+
+        .chapter-divider-label {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            font-size: .72rem;
+            font-weight: 800;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        /* FOOTER */
+        .footer-animlab {
+            border-top: 1px solid var(--border-subtle);
+            padding: 2rem 0;
+            margin-top: 3rem;
+            color: var(--text-muted);
+            font-size: .85rem;
+        }
+
+        /* REVEAL */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: none;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            html {
+                scroll-behavior: auto;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero-methodology {
+                padding: 1.5rem;
+            }
+
+            .reading-banner {
+                padding: 1.5rem;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-animlab sticky-top py-2">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-white" href="index.html">
+                <span class="navbar-brand-badge">AL</span>
+                <span class="d-none d-sm-inline">
+                    AnimLab
+                    <small class="text-secondary fw-normal fs-6 d-none d-md-inline">| Capítulos 1 & 2</small>
+                </span>
+            </a>
+
+            <div class="d-flex align-items-center gap-2 mx-auto">
+                <div class="timer-widget">
+                    <button class="timer-btn timer-btn-primary" id="timerToggleBtn" title="Iniciar / Pausar">
+                        <i class="bi bi-play-fill"></i>
+                    </button>
+                    <span class="timer-display mono" id="lessonTimer">00:00</span>
+                    <button class="timer-btn" id="timerResetBtn" title="Reiniciar">
+                        <i class="bi bi-arrow-counterclockwise"></i>
+                    </button>
+                    <span class="phase-badge bg-primary" id="currentPhaseBadge">Leitura Guiada</span>
+                </div>
+            </div>
+
+            <div class="d-flex align-items-center gap-2">
+                <a href="#modulos" class="btn btn-sm btn-outline-light d-none d-lg-inline-flex">
+                    <i class="bi bi-1-circle me-1"></i> Cap. 1
+                </a>
+                <a href="#modulos-capitulo-2" class="btn btn-sm btn-outline-light d-none d-lg-inline-flex">
+                    <i class="bi bi-2-circle me-1"></i> Cap. 2
+                </a>
+                <a href="modulo1-narrativa.html" class="btn btn-sm btn-primary">
+                    <i class="bi bi-book me-1"></i> Ler Capítulo
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container py-4">
+
+        <!-- HERO -->
+        <section class="hero-methodology reveal">
+            <div class="row align-items-center g-4">
+                <div class="col-lg-7">
+                    <span class="hero-kicker">
+                        <i class="bi bi-mortarboard-fill"></i> Dinâmica Pedagógica Lado a Lado
+                    </span>
+                    <h1 class="hero-title">
+                        Apostila <span class="accent">+ Software</span><br>
+                        Interativo
+                    </h1>
+                    <p class="hero-lede">
+                        O software funciona como um <strong class="text-white">gabarito e laboratório visual
+                            interativo</strong>.
+                        Em vez de apenas ler a teoria, você valida os princípios matemáticos e gráficos
+                        das atividades em tempo real.
+                    </p>
+                </div>
+                <div class="col-lg-5">
+                    <div class="cycle-card">
+                        <div class="cycle-title">
+                            <i class="bi bi-stopwatch"></i> Ciclo de Aula Sugerido · 60 min
+                        </div>
+                        <div class="cycle-step" data-phase="0">
+                            <span>📖 1. Leitura Guiada</span>
+                            <strong class="text-primary">15 min</strong>
+                        </div>
+                        <div class="cycle-step" data-phase="1">
+                            <span>🧪 2. Experimentação</span>
+                            <strong class="text-info">10 min</strong>
+                        </div>
+                        <div class="cycle-step" data-phase="2">
+                            <span>✏️ 3. Resolução do Exercício</span>
+                            <strong class="text-warning">25 min</strong>
+                        </div>
+                        <div class="cycle-step" data-phase="3">
+                            <span>💬 4. Discussão & Feedback</span>
+                            <strong class="text-success">10 min</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pipeline-3">
+                <div class="pipeline-col">
+                    <span class="icon" style="background: rgba(124,108,245,0.15); color: #a598ff;">
+                        <i class="bi bi-book-half"></i>
+                    </span>
+                    <h6>Apostila Teórica</h6>
+                    <p>Conceitos fundamentais, fórmulas e regras de composição do Capítulo 1.</p>
+                </div>
+                <div class="pipeline-col">
+                    <span class="icon" style="background: rgba(34,211,238,0.15); color: #67e8f9;">
+                        <i class="bi bi-cpu"></i>
+                    </span>
+                    <h6>Software de Teste</h6>
+                    <p>Simuladores gráficos para experimentar e validar parâmetros em tempo real.</p>
+                </div>
+                <div class="pipeline-col">
+                    <span class="icon" style="background: rgba(52,211,153,0.15); color: #6ee7b7;">
+                        <i class="bi bi-check2-circle"></i>
+                    </span>
+                    <h6>Exercício Aplicado</h6>
+                    <p>Produção e entrega da ficha técnica com validação imediata.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CAPÍTULO 1 -->
+        <div class="section-header reveal" id="modulos">
+            <span class="section-badge"><i class="bi bi-collection-play"></i></span>
+            <div>
+                <small>Capítulo 01 • Trilha Prática</small>
+                <h4>Fundamentos & Pré-Produção</h4>
+            </div>
+        </div>
+
+        <div class="row g-4">
+
+            <!-- 1.1.1 Narrativa -->
+            <div class="col-md-6 col-xl-4 reveal">
+                <div class="module-card mc-primary">
+                    <div class="module-head">
+                        <span class="module-icon"><i class="bi bi-journal-text"></i></span>
+                        <div>
+                            <span class="module-section">Seção 1.1.1</span>
+                            <h5 class="module-title">Premissa Narrativa</h5>
+                        </div>
+                    </div>
+                    <p class="module-desc">
+                        Estruturação dos 3 Atos, Monomito de Campbell e teste de conflito do 2º Ato
+                        com gerador de ficha técnica em tempo real.
+                    </p>
+                    <a href="modulo1-narrativa.html" class="module-cta">
+                        Abrir Módulo <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 1.1.2 Personagens -->
+            <div class="col-md-6 col-xl-4 reveal">
+                <div class="module-card mc-cyan">
+                    <div class="module-head">
+                        <span class="module-icon"><i class="bi bi-person-bounding-box"></i></span>
+                        <div>
+                            <span class="module-section">Seção 1.1.2</span>
+                            <h5 class="module-title">Processador de Silhueta</h5>
+                        </div>
+                    </div>
+                    <p class="module-desc">
+                        Teste de espaço negativo, pose legível e conversor para silhueta sólida
+                        preta com suporte a upload de sketch — métrica clássica de legibilidade.
+                    </p>
+                    <a href="modulo2-silhueta.html" class="module-cta">
+                        Abrir Módulo <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 1.2 Técnicos -->
+            <div class="col-md-6 col-xl-4 reveal">
+                <div class="module-card mc-rose">
+                    <div class="module-head">
+                        <span class="module-icon"><i class="bi bi-speedometer2"></i></span>
+                        <div>
+                            <span class="module-section">Seção 1.2</span>
+                            <h5 class="module-title">Comparador de FPS</h5>
+                        </div>
+                    </div>
+                    <p class="module-desc">
+                        Visualização simultânea de 12&nbsp;FPS (On Twos), 24&nbsp;FPS (cinema)
+                        e 60&nbsp;FPS (jogos/interativo) em canvas sincronizado.
+                    </p>
+                    <a href="modulo4-fps.html" class="module-cta">
+                        Abrir Módulo <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 1.3 Design & Composição -->
+            <div class="col-md-6 col-xl-4 reveal">
+                <div class="module-card mc-indigo">
+                    <div class="module-head">
+                        <span class="module-icon"><i class="bi bi-bounding-box-circles"></i></span>
+                        <div>
+                            <span class="module-section">Seção 1.3</span>
+                            <h5 class="module-title">Composição & Gestalt</h5>
+                        </div>
+                    </div>
+                    <p class="module-desc">
+                        Simulador das leis de Gestalt (proximidade, semelhança, fechamento),
+                        grids modulares, hierarquia visual e proporção áurea aplicada.
+                    </p>
+                    <a href="modulo3-tercos.html" class="module-cta">
+                        Abrir Módulo <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 1.4 Linguagem Audiovisual -->
+            <div class="col-md-6 col-xl-4 reveal">
+                <div class="module-card mc-amber">
+                    <div class="module-head">
+                        <span class="module-icon"><i class="bi bi-grid-3x3"></i></span>
+                        <div>
+                            <span class="module-section">Seção 1.4</span>
+                            <h5 class="module-title">Regra dos Terços</h5>
+                        </div>
+                    </div>
+                    <p class="module-desc">
+                        Simulador de enquadramento 3×3, comparação entre pose centralizada e
+                        pontos de ouro para direção do olhar e staging.
+                    </p>
+                    <a href="modulo3-tercos.html" class="module-cta">
+                        Abrir Módulo <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 1.5 Princípios Clássicos -->
+            <div class="col-md-6 col-xl-4 reveal">
+                <div class="module-card mc-emerald">
+                    <div class="module-head">
+                        <span class="module-icon"><i class="bi bi-patch-question"></i></span>
+                        <div>
+                            <span class="module-section">Seção 1.5</span>
+                            <h5 class="module-title">Quiz dos 12 Princípios</h5>
+                        </div>
+                    </div>
+                    <p class="module-desc">
+                        Gabarito avaliativo com perguntas práticas sobre Squash & Stretch,
+                        Antecipação, Arcos e Timing — com validação imediata.
+                    </p>
+                    <a href="modulo5-quiz.html" class="module-cta">
+                        Abrir Módulo <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- CTA Leitura Capítulo 1 -->
+        <div class="reading-banner reveal">
+            <div class="reading-banner-content">
+                <div class="reading-banner-kicker">
+                    <i class="bi bi-book-half me-1"></i> Leitura Editorial Completa
+                </div>
+                <h3 class="reading-banner-title">
+                    Capítulo 1 — Características Artísticas & Técnicas
+                </h3>
+                <p class="reading-banner-desc">
+                    Aprofunde-se na teoria fundamental: elementos artísticos, técnicos, princípios
+                    de design, linguagem audiovisual e os 12 princípios clássicos da animação —
+                    com demonstrações interativas e checklist final.
+                </p>
+            </div>
+            <a href="modulo1-narrativa.html" class="reading-banner-cta">
+                <i class="bi bi-journal-richtext"></i> Abrir Capítulo
+            </a>
+        </div>
+
+        <!-- DIVISOR -->
+        <div class="chapter-divider reveal">
+            <span class="chapter-divider-label">
+                <i class="bi bi-arrow-down-circle"></i> Fim do Capítulo 1
+            </span>
+            <span class="chapter-divider-label" style="margin-left: auto; color: var(--brand-secondary);">
+                Início do Capítulo 2 <i class="bi bi-arrow-down-circle"></i>
+            </span>
+        </div>
+
+        <!-- CAPÍTULO 2 -->
+        <div class="section-header reveal" id="modulos-capitulo-2">
+            <span class="section-badge chapter-2"><i class="bi bi-stars"></i></span>
+            <div>
+                <small>Capítulo 02 • Trilha Prática</small>
+                <h4>Princípios Clássicos & Movimento Cinético</h4>
+            </div>
+        </div>
+
+        <div class="row g-4">
+
+            <!-- 2.1 Squash & Stretch -->
+            <div class="col-md-6 col-xl-4 reveal">
+                <div class="module-card mc-rose">
+                    <div class="module-head">
+                        <span class="module-icon"><i class="bi bi-arrow-down-up"></i></span>
+                        <div>
+                            <span class="module-section">Seção 2.1</span>
+                            <h5 class="module-title">Squash & Stretch Lab</h5>
+                        </div>
+                    </div>
+                    <p class="module-desc">
+                        Simulador de deformação com sliders de elasticidade, física de impacto
+                        e preservação de volume — o princípio mais antigo da animação em ação.
+                    </p>
+                    <a href="modulo5-quiz.html" class="module-cta">
+                        Abrir Módulo <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 2.2 Timing & Spacing -->
+            <div class="col-md-6 col-xl-4 reveal">
+                <div class="module-card mc-amber">
+                    <div class="module-head">
+                        <span class="module-icon"><i class="bi bi-bar-chart-steps"></i></span>
+                        <div>
+                            <span class="module-section">Seção 2.2</span>
+                            <h5 class="module-title">Timing & Spacing Editor</h5>
+                        </div>
+                    </div>
+                    <p class="module-desc">
+                        Editor visual de key poses e inbetweens, com curvas de easing,
+                        comparativo de densidade de quadros e sensação de peso percebido.
+                    </p>
+                    <a href="modulo4-fps.html" class="module-cta">
+                        Abrir Módulo <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 2.3 Arcos & Trajetórias -->
+            <div class="col-md-6 col-xl-4 reveal">
+                <div class="module-card mc-cyan">
+                    <div class="module-head">
+                        <span class="module-icon"><i class="bi bi-bezier2"></i></span>
+                        <div>
+                            <span class="module-section">Seção 2.3</span>
+                            <h5 class="module-title">Traçador de Arcos</h5>
+                        </div>
+                    </div>
+                    <p class="module-desc">
+                        Análise de trajetórias parabólicas em saltos, rotações e lançamentos,
+                        com detecção de linearidade errada e visualização do arco físico.
+                    </p>
+                    <a href="modulo5-quiz.html" class="module-cta">
+                        Abrir Módulo <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 2.4 Antecipação & Follow Through -->
+            <div class="col-md-6 col-xl-4 reveal">
+                <div class="module-card mc-indigo">
+                    <div class="module-head">
+                        <span class="module-icon"><i class="bi bi-lightning-charge"></i></span>
+                        <div>
+                            <span class="module-section">Seção 2.4</span>
+                            <h5 class="module-title">Antecipação & Continuidade</h5>
+                        </div>
+                    </div>
+                    <p class="module-desc">
+                        Stage de ação física com preparação, impacto e overlap de membros —
+                        mostrando antecipação, follow through e overlapping action.
+                    </p>
+                    <a href="modulo2-silhueta.html" class="module-cta">
+                        Abrir Módulo <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 2.5 Pose to Pose vs Straight Ahead -->
+            <div class="col-md-6 col-xl-4 reveal">
+                <div class="module-card mc-emerald">
+                    <div class="module-head">
+                        <span class="module-icon"><i class="bi bi-shuffle"></i></span>
+                        <div>
+                            <span class="module-section">Seção 2.5</span>
+                            <h5 class="module-title">Pose to Pose vs. Straight Ahead</h5>
+                        </div>
+                    </div>
+                    <p class="module-desc">
+                        Comparação lado a lado dos dois métodos de produção com flipbook
+                        interativo, visualização de keyframes e controle de previsibilidade.
+                    </p>
+                    <a href="modulo2-silhueta.html" class="module-cta">
+                        Abrir Módulo <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 2.6 Ação Secundária -->
+            <div class="col-md-6 col-xl-4 reveal">
+                <div class="module-card mc-primary">
+                    <div class="module-head">
+                        <span class="module-icon"><i class="bi bi-wind"></i></span>
+                        <div>
+                            <span class="module-section">Seção 2.6</span>
+                            <h5 class="module-title">Ação Secundária</h5>
+                        </div>
+                    </div>
+                    <p class="module-desc">
+                        Editor de overlays para cabelo, tecido e caudas com simulação de
+                        inércia — a camada de detalhes que dá vida ao movimento principal.
+                    </p>
+                    <a href="modulo5-quiz.html" class="module-cta">
+                        Abrir Módulo <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- CTA Leitura Capítulo 2 -->
+        <div class="reading-banner chapter-2 reveal">
+            <div class="reading-banner-content">
+                <div class="reading-banner-kicker">
+                    <i class="bi bi-film me-1"></i> Leitura Editorial Completa
+                </div>
+                <h3 class="reading-banner-title">
+                    Capítulo 2 — Princípios Clássicos & Movimento Cinético
+                </h3>
+                <p class="reading-banner-desc">
+                    Domine os 12 princípios de Disney aplicados à prática: squash & stretch,
+                    timing, arcos, antecipação, pose to pose e ação secundária — com laboratórios
+                    interativos e análise de movimento quadro a quadro.
+                </p>
+            </div>
+            <a href="modulo2-silhueta.html" class="reading-banner-cta">
+                <i class="bi bi-journal-richtext"></i> Abrir Módulo 2
+            </a>
+        </div>
+
+    </main>
+
+    <footer class="footer-animlab">
+        <div class="container px-4">
+            <div class="row align-items-center g-3">
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="navbar-brand-badge" style="width: 28px; height: 28px; font-size: .8rem;">AL</span>
+                        <span class="fw-bold text-white">AnimLab</span>
+                        <span class="text-muted">·</span>
+                        <span>Capítulos 1 & 2 — Fundamentos & Princípios</span>
+                    </div>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <span class="mono small">
+                        <i class="bi bi-code-slash me-1"></i>
+                        HTML · Bootstrap 5.3 · Canvas API
+                    </span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        /* CRONÔMETRO */
+        let lessonSeconds = parseInt(localStorage.getItem('animlab_timer') || '0');
+        let isTimerRunning = localStorage.getItem('animlab_timer_running') === 'true';
+        let timerInterval = null;
+
+        const phases = [
+            { max: 15 * 60, label: '1. Leitura Guiada', badgeClass: 'bg-primary' },
+            { max: 25 * 60, label: '2. Experimentação', badgeClass: 'bg-info text-dark' },
+            { max: 50 * 60, label: '3. Exercício Prático', badgeClass: 'bg-warning text-dark' },
+            { max: 60 * 60, label: '4. Discussão', badgeClass: 'bg-success' },
+            { max: Infinity, label: 'Tempo Excedido', badgeClass: 'bg-danger' }
+        ];
+
+        function updateTimerUI() {
+            const mins = Math.floor(lessonSeconds / 60);
+            const secs = lessonSeconds % 60;
+            const el = document.getElementById('lessonTimer');
+            const badge = document.getElementById('currentPhaseBadge');
+            if (el) el.innerText = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+
+            const current = phases.find(p => lessonSeconds < p.max) || phases[phases.length - 1];
+            if (badge) {
+                badge.innerText = current.label;
+                badge.className = `phase-badge ${current.badgeClass}`;
+            }
+
+            const phaseIdx = phases.indexOf(current);
+            document.querySelectorAll('.cycle-step').forEach((step, i) => {
+                step.classList.toggle('active', i === phaseIdx);
+            });
+        }
+
+        function startTimer() {
+            if (timerInterval) return;
+            isTimerRunning = true;
+            localStorage.setItem('animlab_timer_running', 'true');
+            document.getElementById('timerToggleBtn').innerHTML = '<i class="bi bi-pause-fill"></i>';
+            timerInterval = setInterval(() => {
+                lessonSeconds++;
+                localStorage.setItem('animlab_timer', lessonSeconds);
+                updateTimerUI();
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            isTimerRunning = false;
+            localStorage.setItem('animlab_timer_running', 'false');
+            document.getElementById('timerToggleBtn').innerHTML = '<i class="bi bi-play-fill"></i>';
+        }
+
+        function toggleLessonTimer() {
+            if (isTimerRunning) stopTimer();
+            else startTimer();
+        }
+
+        function resetLessonTimer() {
+            stopTimer();
+            lessonSeconds = 0;
+            localStorage.setItem('animlab_timer', '0');
+            updateTimerUI();
+        }
+
+        document.getElementById('timerToggleBtn').addEventListener('click', toggleLessonTimer);
+        document.getElementById('timerResetBtn').addEventListener('click', resetLessonTimer);
+
+        updateTimerUI();
+        if (isTimerRunning) startTimer();
+
+        /* REVEAL */
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('visible');
+                    revealObserver.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.08 });
+
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+    </script>
+
+</body>
+
+</html>

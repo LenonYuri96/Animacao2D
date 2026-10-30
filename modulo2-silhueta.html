@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-bs-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 2 • Seleção de Imagens, Áudios & Assets — Laboratório & Apostila</title>
+
+    <!-- Bootstrap 5.3 & Ícones -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    <!-- Tipografia Editorial & Interface -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Fraunces:wght@500;700;900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --brand-primary: #f472b6;
+            --brand-primary-soft: #fbcfe8;
+            --brand-secondary: #22d3ee;
+            --brand-accent: #7c6cf5;
+            --brand-success: #34d399;
+            --brand-warning: #fbbf24;
+            --brand-danger: #f87171;
+
+            --bg-canvas: #070b14;
+            --surface-1: #111827;
+            --surface-2: #16203a;
+            --surface-3: #1e2a44;
+            --border-subtle: rgba(148, 163, 184, 0.12);
+            --border-strong: rgba(148, 163, 184, 0.25);
+
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+
+            --grad-brand-2: linear-gradient(135deg, #f472b6 0%, #22d3ee 100%);
+            --grad-hero: radial-gradient(ellipse at top left, rgba(244, 114, 182, 0.22), transparent 55%),
+                radial-gradient(ellipse at bottom right, rgba(34, 211, 238, 0.18), transparent 55%);
+
+            --shadow-md: 0 8px 24px -6px rgba(0, 0, 0, 0.5), 0 2px 6px -1px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 24px 48px -12px rgba(0, 0, 0, 0.65);
+            --shadow-glow: 0 0 0 1px rgba(244, 114, 182, 0.35), 0 12px 32px -8px rgba(244, 114, 182, 0.45);
+
+            --font-ui: 'Plus Jakarta Sans', system-ui, sans-serif;
+            --font-editorial: 'Fraunces', Georgia, serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --ease: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
+        body {
+            font-family: var(--font-ui);
+            background-color: var(--bg-canvas);
+            background-image:
+                radial-gradient(circle at 10% 0%, rgba(244, 114, 182, 0.10), transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(34, 211, 238, 0.08), transparent 45%);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-canvas);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--surface-3);
+            border-radius: 8px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--brand-primary);
+        }
+
+        .mono {
+            font-family: var(--font-mono);
+        }
+
+        .editorial {
+            font-family: var(--font-editorial);
+        }
+
+        #readingProgress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            width: 0%;
+            background: var(--grad-brand-2);
+            z-index: 2100;
+            box-shadow: 0 0 12px rgba(244, 114, 182, 0.8);
+            transition: width 0.1s linear;
+        }
+
+        .navbar-animlab {
+            background: rgba(7, 11, 20, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-subtle);
+            z-index: 2000;
+        }
+
+        .navbar-brand-badge {
+            width: 34px;
+            height: 34px;
+            border-radius: 9px;
+            background: var(--grad-brand-2);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 12px rgba(244, 114, 182, 0.5);
+        }
+
+        .layout-pill-btn {
+            padding: 0.28rem 0.75rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+            border-radius: 20px;
+            border: 1px solid var(--border-subtle);
+            background: var(--surface-1);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+        }
+
+        .layout-pill-btn.active {
+            background: var(--grad-brand-2);
+            color: #000;
+            border-color: transparent;
+            font-weight: 800;
+            box-shadow: 0 0 12px rgba(244, 114, 182, 0.4);
+        }
+
+        .chapter-hero {
+            position: relative;
+            padding: 2.75rem 0 2rem;
+            background: var(--grad-hero);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .chapter-title {
+            font-family: var(--font-editorial);
+            font-weight: 900;
+            font-size: clamp(1.8rem, 3.8vw, 2.9rem);
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin: 0.75rem 0 0.5rem;
+        }
+
+        .chapter-title .accent {
+            background: var(--grad-brand-2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .glass-card {
+            background-color: var(--surface-1);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+        }
+
+        .scrollable-pane {
+            max-height: calc(100vh - 170px);
+            overflow-y: auto;
+            padding-right: 12px;
+        }
+
+        .scrollable-pane::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .scrollable-pane::-webkit-scrollbar-thumb {
+            background: var(--surface-3);
+            border-radius: 4px;
+        }
+
+        .callout {
+            display: flex;
+            gap: 0.85rem;
+            padding: 1rem 1.15rem;
+            border-radius: 12px;
+            margin: 1.25rem 0;
+            border: 1px solid;
+            border-left-width: 4px;
+            font-size: .92rem;
+        }
+
+        .callout-rose {
+            background: rgba(244, 114, 182, 0.08);
+            border-color: rgba(244, 114, 182, 0.4);
+        }
+
+        .callout-cyan {
+            background: rgba(34, 211, 238, 0.08);
+            border-color: rgba(34, 211, 238, 0.4);
+        }
+
+        .callout-amber {
+            background: rgba(251, 191, 36, 0.08);
+            border-color: rgba(251, 191, 36, 0.4);
+        }
+
+        .format-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 1rem 0;
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            overflow: hidden;
+            font-size: .84rem;
+        }
+
+        .format-table th {
+            background: var(--surface-3);
+            padding: .7rem .85rem;
+            color: var(--text-muted);
+            font-weight: 800;
+            font-size: .7rem;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            border-bottom: 1px solid var(--border-strong);
+        }
+
+        .format-table td {
+            padding: .7rem .85rem;
+            border-bottom: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+        }
+
+        .format-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .pipeline-mini {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: .5rem;
+            margin: 1rem 0;
+            counter-reset: step;
+        }
+
+        .pipeline-mini-step {
+            position: relative;
+            padding: .85rem .7rem .65rem;
+            border-radius: 10px;
+            background: var(--surface-2);
+            border: 1px solid var(--border-subtle);
+            font-size: .78rem;
+        }
+
+        .pipeline-mini-step::before {
+            counter-increment: step;
+            content: counter(step);
+            position: absolute;
+            top: -7px;
+            left: .65rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 5px;
+            background: var(--grad-brand-2);
+            color: #000;
+            font-size: .65rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Laboratório de Áudio */
+        .audio-wave-box {
+            background: #0c1220;
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 1rem;
+            position: relative;
+        }
+
+        #audioWaveCanvas {
+            width: 100%;
+            height: 100px;
+            display: block;
+            border-radius: 8px;
+            background: #070b14;
+        }
+
+        /* Inspetor de Imagens */
+        .drop-zone {
+            border: 2px dashed rgba(244, 114, 182, 0.4);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            background: rgba(244, 114, 182, 0.03);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .drop-zone:hover {
+            border-color: var(--brand-primary);
+            background: rgba(244, 114, 182, 0.08);
+        }
+
+        .preview-canvas-box {
+            background: #0f172a;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border-subtle);
+            aspect-ratio: 16 / 9;
+            position: relative;
+        }
+
+        #inspectorCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .checkerboard-bg {
+            background-image: linear-gradient(45deg, #1e293b 25%, transparent 25%),
+                linear-gradient(-45deg, #1e293b 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #1e293b 75%),
+                linear-gradient(-45deg, transparent 75%, #1e293b 75%);
+            background-size: 16px 16px;
+            background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+        }
+
+        /* Quiz */
+        .quiz-card {
+            background: var(--surface-2);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: .85rem;
+        }
+
+        .timer-badge {
+            background: rgba(244, 114, 182, 0.15);
+            border: 1px solid var(--brand-primary);
+            color: #fbcfe8;
+        }
+
+        @media print {
+
+            .no-print,
+            #readingProgress,
+            .navbar-animlab {
+                display: none !important;
+            }
+
+            body {
+                background: #fff;
+                color: #000;
+            }
+
+            .glass-card {
+                background: #fff;
+                border: 1px solid #ccc;
+                color: #000;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="readingProgress"></div>
+
+    <!-- NAVBAR UNIFICADA -->
+    <nav class="navbar navbar-expand-lg navbar-animlab sticky-top py-2 no-print">
+        <div class="container-fluid px-3 px-md-4">
+            <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-white" href="index.html">
+                <span class="navbar-brand-badge">C2</span>
+                <span>AnimLab <small class="text-secondary fw-normal fs-6">| Módulo 2: Curadoria de
+                        Assets</small></span>
+            </a>
+
+            <!-- Seletor de Modo -->
+            <div class="d-none d-lg-flex align-items-center gap-1 bg-body-tertiary p-1 rounded-pill border">
+                <button class="layout-pill-btn active" id="btnModeSplit" onclick="switchMode('split')">
+                    <i class="bi bi-layout-split me-1"></i> Lado a Lado (Estúdio)
+                </button>
+                <button class="layout-pill-btn" id="btnModeReading" onclick="switchMode('reading')">
+                    <i class="bi bi-book me-1"></i> Leitura Teórica
+                </button>
+                <button class="layout-pill-btn" id="btnModeStudio" onclick="switchMode('studio')">
+                    <i class="bi bi-cpu me-1"></i> Laboratório Técnico
+                </button>
+            </div>
+
+            <!-- Cronômetro da Aula -->
+            <div class="d-flex align-items-center gap-2 bg-body-tertiary px-3 py-1 rounded-pill border">
+                <span id="lessonTimer" class="fw-bold mono text-warning small">00:00</span>
+                <span id="currentPhaseBadge" class="badge timer-badge d-none d-sm-inline"
+                    style="font-size:0.7rem;">Sincronizado</span>
+            </div>
+
+            <!-- Ações -->
+            <div class="d-flex align-items-center gap-2">
+                <a href="modulo1-narrativa.html" class="btn btn-sm btn-outline-secondary" title="Voltar ao Módulo 1">
+                    <i class="bi bi-arrow-left me-1"></i> Cap. 1
+                </a>
+                <button class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#aiConfigModal"
+                    title="Configurar IA">
+                    <i class="bi bi-cpu"></i> <span id="aiStatusBadge" class="d-none d-md-inline">IA: Local</span>
+                </button>
+                <a href="index.html" class="btn btn-sm btn-primary">
+                    <i class="bi bi-house me-1"></i> Lobby
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO DO CAPÍTULO 2 -->
+    <header class="chapter-hero no-print">
+        <div class="container-fluid px-4 px-lg-5">
+            <span class="badge rounded-pill"
+                style="background: rgba(244,114,182,0.15); color: var(--brand-primary); border: 1px solid rgba(244,114,182,0.35);">
+                <i class="bi bi-folder-symlink-fill me-1"></i> Capítulo 02 da Apostila • Curadoria &amp; Engenharia de
+                Assets
+            </span>
+            <h1 class="chapter-title">
+                Seleção de <span class="accent">Imagens</span>, <span class="accent">Áudios</span> &amp; Assets
+            </h1>
+            <p class="text-secondary mb-0 col-xxl-9" style="font-size: 1.05rem;">
+                A seleção de matéria-prima audiovisual como decisão técnica e legal integrada: formatos raster e
+                vetoriais, especificações broadcast de áudio (48&nbsp;kHz / 24-bit), licenciamento (RM, RF, CC),
+                curadoria algorítmica de IA e arquitetura de nomenclatura industrial.
+            </p>
+        </div>
+    </header>
+
+    <!-- CONTAINER PRINCIPAL HÍBRIDO -->
+    <main class="container-fluid px-3 px-lg-4 py-3">
+        <div class="row g-3" id="mainLayoutRow">
+
+            <!-- ============================================================
+                 COLUNA ESQUERDA: APOSTILA DIDÁTICA DO CAPÍTULO 2
+                 ============================================================ -->
+            <div class="col-xl-6 col-lg-6" id="colApostila">
+                <div class="glass-card p-3 p-md-4 h-100 d-flex flex-column">
+
+                    <div
+                        class="d-flex justify-content-between align-items-center pb-2 mb-3 border-bottom border-secondary-subtle">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="navbar-brand-badge" style="width:26px; height:26px; font-size:0.75rem;"><i
+                                    class="bi bi-book"></i></span>
+                            <h5 class="fw-bold text-white mb-0 fs-6">Apostila Teórica: Capítulo 2 Integral</h5>
+                        </div>
+                        <span class="badge bg-dark border text-secondary mono" style="font-size:0.68rem;">Págs. 76 a
+                            98</span>
+                    </div>
+
+                    <div class="scrollable-pane pe-2" id="apostilaScrollBox">
+
+                        <!-- OBJETIVOS DO CAPÍTULO 2 -->
+                        <div class="row g-2 mb-3">
+                            <div class="col-6 col-md-3">
+                                <div class="p-2 rounded bg-dark border small text-center h-100">
+                                    <i class="bi bi-file-earmark-code-fill text-danger d-block mb-1"></i>
+                                    <strong>Diferenciar</strong>
+                                    <div class="text-secondary" style="font-size:0.7rem;">Raster vs Vetor</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="p-2 rounded bg-dark border small text-center h-100">
+                                    <i class="bi bi-soundwave text-info d-block mb-1"></i>
+                                    <strong>Avaliar Áudio</strong>
+                                    <div class="text-secondary" style="font-size:0.7rem;">48 kHz / 24-bit</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="p-2 rounded bg-dark border small text-center h-100">
+                                    <i class="bi bi-shield-check text-warning d-block mb-1"></i>
+                                    <strong>Licenciar</strong>
+                                    <div class="text-secondary" style="font-size:0.7rem;">RM, RF, Releases</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="p-2 rounded bg-dark border small text-center h-100">
+                                    <i class="bi bi-robot text-success d-block mb-1"></i>
+                                    <strong>Curar IA</strong>
+                                    <div class="text-secondary" style="font-size:0.7rem;">Inpainting &amp; Seed</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2. INTRODUÇÃO À SELEÇÃO DE ASSETS -->
+                        <section class="mb-4">
+                            <h6 class="fw-bold text-white border-bottom border-secondary-subtle pb-1">2. O Axioma da
+                                Matéria-Prima Digital</h6>
+                            <p class="small text-secondary mb-2">
+                                A seleção criteriosa de imagens, áudios e demais assets é etapa determinante na
+                                construção de qualquer projeto digital. Não se trata de escolher elementos visualmente
+                                agradáveis: trata-se de aplicar critérios técnicos, avaliar conformidade com
+                                especificações e garantir compatibilidade operacional.
+                            </p>
+                            <div class="callout callout-rose py-2 my-2">
+                                <i class="bi bi-lightbulb-fill text-primary fs-5"></i>
+                                <div class="small">
+                                    <strong class="text-white">Axioma Central:</strong> A tecnologia não substitui o
+                                    critério profissional. Automatização sem verificação é procedimento temerário. Toda
+                                    decisão de asset impacta desempenho, conformidade jurídica e custo de renderização.
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- 2.1 TIPOS DE ARQUIVOS (RASTER VS VETOR) -->
+                        <section class="mb-4">
+                            <h6 class="fw-bold text-white border-bottom border-secondary-subtle pb-1">2.1 Tipos de
+                                Arquivos: Geometria &amp; Compressão</h6>
+                            <p class="small text-secondary mb-2">
+                                A dicotomia fundamental separa gráficos raster (pixels finitos) de gráficos vetoriais
+                                (equações matemáticas de Bézier). A escolha errada condena o projeto a refações
+                                custosas.
+                            </p>
+
+                            <table class="format-table">
+                                <thead>
+                                    <tr>
+                                        <th>Formato</th>
+                                        <th>Tipo</th>
+                                        <th>Compressão</th>
+                                        <th>Canal Alfa</th>
+                                        <th>Aplicação Recomendada</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>JPEG</code></td>
+                                        <td>Raster</td>
+                                        <td>Lossy (com perdas)</td>
+                                        <td>Não</td>
+                                        <td>Fotografias e texturas sem transparência.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>PNG</code></td>
+                                        <td>Raster</td>
+                                        <td>Lossless (sem perdas)</td>
+                                        <td>Sim (8/16-bit)</td>
+                                        <td>Overlays, UI e elementos com transparência.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>SVG</code></td>
+                                        <td>Vetor</td>
+                                        <td>XML Paramétrico</td>
+                                        <td>Sim</td>
+                                        <td>Logotipos, ícones e rigs escaláveis.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>WEBP</code></td>
+                                        <td>Híbrido</td>
+                                        <td>Lossy/Lossless</td>
+                                        <td>Sim</td>
+                                        <td>Padrão web de alta densidade e baixo peso.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>TIFF</code></td>
+                                        <td>Raster</td>
+                                        <td>Lossless / LZW</td>
+                                        <td>Sim</td>
+                                        <td>Master de impressão e pintura de background.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </section>
+
+                        <!-- 2.2 BANCOS DE IMAGENS & JURÍDICO -->
+                        <section class="mb-4">
+                            <h6 class="fw-bold text-white border-bottom border-secondary-subtle pb-1">2.2 Bancos de
+                                Imagens &amp; Conformidade Jurídica</h6>
+                            <p class="small text-secondary mb-2">
+                                <strong>Royalty-Free (RF) não significa gratuito</strong>: significa ausência de
+                                royalties recorrentes por tiragem. O uso comercial impõe verificação rigorosa de:
+                            </p>
+                            <ul class="small text-secondary ps-3 mb-2">
+                                <li><strong>Model Release:</strong> Autorização assinada de cessão de imagem para
+                                    qualquer pessoa reconhecível.</li>
+                                <li><strong>Property Release:</strong> Autorização para prédios privados, marcas ou
+                                    obras de arte protegidas.</li>
+                                <li><strong>Creative Commons (CC):</strong> Verificar exigência de atribuição (BY) ou
+                                    restrição comercial (NC).</li>
+                            </ul>
+                        </section>
+
+                        <!-- 2.3 ÁUDIO & BROADCAST -->
+                        <section class="mb-4">
+                            <h6 class="fw-bold text-white border-bottom border-secondary-subtle pb-1">2.3 Bibliotecas de
+                                Áudio &amp; Engenharia Sonora</h6>
+                            <p class="small text-secondary mb-2">
+                                O som governa mais de 50% da percepção cinematográfica. Enquanto a música para internet
+                                opera a 44.1&nbsp;kHz / 16-bit, o padrão mandatório para vídeo e broadcast é
+                                <strong>48&nbsp;kHz / 24-bit</strong> (ou 96&nbsp;kHz em sound design), oferecendo
+                                headroom contra distorção em clipping (0 dBFS).
+                            </p>
+                            <div class="callout callout-cyan py-2 my-2">
+                                <i class="bi bi-soundwave text-info fs-5"></i>
+                                <div class="small">
+                                    <strong>Estrutura de Stems:</strong> Produções profissionais nunca usam apenas o
+                                    "Full Mix". Trabalha-se com faixas isoladas (Diálogos, Efeitos/Foley e Trilha/BGM)
+                                    para permitir cortes sem interrupção de notas musicais.
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- 2.4 A 2.7 ASSETS 3D, IA GENERATIVA & USD -->
+                        <section class="mb-4">
+                            <h6 class="fw-bold text-white border-bottom border-secondary-subtle pb-1">2.4 a 2.7 Assets
+                                3D, IA Generativa &amp; Pipelines DCC</h6>
+                            <p class="small text-secondary mb-2">
+                                Modelos 3D exigem topologia em quadriláteros (quads), evitando triângulos disformes
+                                (n-gons). Na IA generativa, a geração estocástica exige <strong>curadoria
+                                    técnica</strong>: inpainting para sanar anomalias e over-painting para evitar o
+                                <em>Uncanny Valley</em> corporativo.
+                            </p>
+                            <div class="pipeline-mini my-2">
+                                <div class="pipeline-mini-step"><strong>DCC Modular</strong><br><small
+                                        class="text-secondary">ZBrush / Blender</small></div>
+                                <div class="pipeline-mini-step"><strong>PBR Textures</strong><br><small
+                                        class="text-secondary">Substance Painter</small></div>
+                                <div class="pipeline-mini-step"><strong>Scene Master</strong><br><small
+                                        class="text-secondary">Universal Scene (USD)</small></div>
+                                <div class="pipeline-mini-step"><strong>Real-Time</strong><br><small
+                                        class="text-secondary">Unreal / OpenToonz</small></div>
+                            </div>
+                        </section>
+
+                        <!-- FIXAÇÃO: CHECKLIST -->
+                        <section class="p-3 rounded bg-dark border">
+                            <h6 class="fw-bold text-success mb-1 small"><i class="bi bi-shield-check me-1"></i>
+                                Critérios de Aprovação de Asset:</h6>
+                            <div class="small text-secondary d-flex flex-column gap-1" style="font-size:0.75rem;">
+                                <div><i class="bi bi-check2 text-success me-1"></i> Resolução compatível com destino
+                                    (sem upscaling artificial borrado).</div>
+                                <div><i class="bi bi-check2 text-success me-1"></i> Áudio exportado em 48 kHz / 24-bit
+                                    sem ruído de DC offset.</div>
+                                <div><i class="bi bi-check2 text-success me-1"></i> Nomenclatura aderente à ontologia:
+                                    <code>PRJ_C02_TIPO_NOME_V01.ext</code>.</div>
+                            </div>
+                        </section>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+                 PAINEL DIREITO: LABORATÓRIO PRÁTICO & SOFTWARE DE ASSETS
+                 ============================================================ -->
+            <div class="col-xl-6 col-lg-6" id="colStudio">
+                <div class="glass-card p-3 p-md-4 h-100 d-flex flex-column">
+
+                    <div
+                        class="d-flex justify-content-between align-items-center pb-2 mb-3 border-bottom border-secondary-subtle">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="navbar-brand-badge" style="width:26px; height:26px; font-size:0.75rem;"><i
+                                    class="bi bi-cpu"></i></span>
+                            <h5 class="fw-bold text-white mb-0 fs-6">Laboratório Prático de Seleção &amp; Validação</h5>
+                        </div>
+                        <span class="badge bg-secondary-subtle text-secondary border mono"
+                            style="font-size:0.68rem;">Ambiente Híbrido</span>
+                    </div>
+
+                    <div class="scrollable-pane pe-2" id="studioScrollBox">
+
+                        <!-- FERRAMENTA 1: INSPETOR DE IMAGENS & VETORES -->
+                        <div class="p-3 bg-body-tertiary rounded-3 border mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary text-white">1. Inspetor de Imagens &amp; Resolução (Seção
+                                    2.1)</span>
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-outline-secondary" style="font-size:0.7rem;"
+                                        onclick="loadSampleAsset('png_alpha')">Amostra PNG Alfa</button>
+                                    <button class="btn btn-outline-secondary" style="font-size:0.7rem;"
+                                        onclick="loadSampleAsset('jpg_photo')">Amostra JPG Foto</button>
+                                    <button class="btn btn-outline-secondary" style="font-size:0.7rem;"
+                                        onclick="loadSampleAsset('svg_vector')">Amostra SVG Vetor</button>
+                                </div>
+                            </div>
+
+                            <!-- Drop Zone e Visualizador -->
+                            <div class="row g-2 mb-2">
+                                <div class="col-md-7">
+                                    <div class="preview-canvas-box checkerboard-bg">
+                                        <canvas id="inspectorCanvas" width="640" height="360"></canvas>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <label
+                                        class="drop-zone w-100 h-100 d-flex flex-column justify-content-center align-items-center p-2 mb-0">
+                                        <i class="bi bi-cloud-arrow-up fs-3 text-primary mb-1"></i>
+                                        <strong class="small text-white">Arraste ou Selecione Asset</strong>
+                                        <small class="text-secondary" style="font-size:0.7rem;">PNG, JPG, SVG,
+                                            WEBP</small>
+                                        <input type="file" id="assetFileInput" accept="image/*,.svg" hidden
+                                            onchange="handleAssetUpload(event)">
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Diagnóstico de Metadados -->
+                            <div class="row g-2 small text-secondary">
+                                <div class="col-3">
+                                    <div class="p-2 bg-dark rounded border"><span class="d-block text-muted"
+                                            style="font-size:0.65rem;">FORMATO:</span><strong class="text-white mono"
+                                            id="metaFormat">PNG</strong></div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="p-2 bg-dark rounded border"><span class="d-block text-muted"
+                                            style="font-size:0.65rem;">RESOLUÇÃO:</span><strong class="text-white mono"
+                                            id="metaRes">1920x1080</strong></div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="p-2 bg-dark rounded border"><span class="d-block text-muted"
+                                            style="font-size:0.65rem;">CANAL ALFA:</span><strong
+                                            class="text-success mono" id="metaAlpha">Detectado</strong></div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="p-2 bg-dark rounded border"><span class="d-block text-muted"
+                                            style="font-size:0.65rem;">COMPRESSÃO:</span><strong class="text-info mono"
+                                            id="metaComp">Lossless</strong></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- FERRAMENTA 2: ESTAÇÃO DE ÁUDIO & MONITOR DE 48 KHZ -->
+                        <div class="p-3 bg-body-tertiary rounded-3 border mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-info text-dark">2. Estação de Áudio &amp; Stems (Seção 2.3)</span>
+                                <span class="badge bg-dark border mono text-warning" style="font-size:0.68rem;"
+                                    id="audioStandardBadge">Broadcast: 48 kHz / 24-bit</span>
+                            </div>
+
+                            <div class="audio-wave-box mb-2">
+                                <canvas id="audioWaveCanvas" width="600" height="90"></canvas>
+                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                    <div class="btn-group btn-group-sm">
+                                        <button class="btn btn-outline-light" id="btnAudioPlay"
+                                            onclick="toggleAudioEngine()"><i class="bi bi-play-fill"></i> Tocar
+                                            Amostra</button>
+                                        <button class="btn btn-outline-secondary"
+                                            onclick="setStemMode('dialogue')">Voz/Diálogo</button>
+                                        <button class="btn btn-outline-secondary"
+                                            onclick="setStemMode('sfx')">Foley/SFX</button>
+                                        <button class="btn btn-outline-secondary"
+                                            onclick="setStemMode('music')">Trilha/BGM</button>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <small class="text-secondary mono" style="font-size:0.75rem;">BPM:</small>
+                                        <strong class="text-warning mono" id="bpmDisplay">120</strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Checagem de Content ID e Whitelist -->
+                            <div
+                                class="p-2 rounded bg-dark border small d-flex justify-content-between align-items-center">
+                                <div><i class="bi bi-shield-check text-success me-1"></i> <span
+                                        id="licenseAudioText">Licença Direta: Whitelisted para YouTube/Twitch</span>
+                                </div>
+                                <span class="badge bg-success-subtle text-success">Livre de Strikes</span>
+                            </div>
+                        </div>
+
+                        <!-- FERRAMENTA 3: MATRIZ DE LICENCIAMENTO & GERADOR DE BOM -->
+                        <div class="p-3 bg-body-tertiary rounded-3 border mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-warning text-dark">3. Matriz de Licenciamento &amp; BOM (Seção 2.2
+                                    &amp; 2.4)</span>
+                                <button class="btn btn-sm btn-outline-warning py-0 px-2" style="font-size:0.7rem;"
+                                    onclick="addAssetToBOM()">+ Registrar na Ficha</button>
+                            </div>
+
+                            <div class="row g-2 mb-2 small">
+                                <div class="col-md-4">
+                                    <label class="form-label text-secondary mb-0" style="font-size:0.7rem;">Modalidade
+                                        de Licença</label>
+                                    <select class="form-select form-select-sm" id="licTypeSelect"
+                                        onchange="updateLicenseLogic()">
+                                        <option value="RF" selected>Royalty-Free Comercial (Pago)</option>
+                                        <option value="RM">Rights Managed (Território Estrito)</option>
+                                        <option value="CC_BY">Creative Commons (CC-BY com Atribuição)</option>
+                                        <option value="CC0">Domínio Público / CC0 (Livre)</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label text-secondary mb-0" style="font-size:0.7rem;">Pessoas
+                                        Identificáveis?</label>
+                                    <select class="form-select form-select-sm" id="licModelSelect"
+                                        onchange="updateLicenseLogic()">
+                                        <option value="nao">Não (Cenário / Objeto)</option>
+                                        <option value="sim_com">Sim (Com Model Release Assinado)</option>
+                                        <option value="sim_sem">Sim (SEM Autorização - Risco!)</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label text-secondary mb-0" style="font-size:0.7rem;">Destino
+                                        Comercial</label>
+                                    <select class="form-select form-select-sm" id="licUsageSelect"
+                                        onchange="updateLicenseLogic()">
+                                        <option value="comercial">Campanha Comercial / Monetizado</option>
+                                        <option value="educacional">Treinamento Interno / Educacional</option>
+                                        <option value="editorial">Uso Estritamente Editorial</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Diagnóstico Jurídico -->
+                            <div class="alert alert-dark border p-2 mb-2 small" id="licenseAlertBox">
+                                <i class="bi bi-check-circle-fill text-success me-1"></i> <strong>Conformidade
+                                    Validada:</strong> O asset está liberado para uso comercial sem risco de litígio.
+                            </div>
+
+                            <!-- Tabela do BOM (Bill of Materials) -->
+                            <div class="table-responsive">
+                                <table class="table table-dark table-sm table-bordered small mb-0"
+                                    style="font-size:0.72rem;">
+                                    <thead>
+                                        <tr>
+                                            <th>Nome do Asset</th>
+                                            <th>Formato</th>
+                                            <th>Licença</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="bomTableBody">
+                                        <tr>
+                                            <td><code>PRJ_C02_IMG_BG_SALA_V01.png</code></td>
+                                            <td>PNG 24-bit</td>
+                                            <td>Royalty-Free</td>
+                                            <td><span class="badge bg-success">Conforme</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- FERRAMENTA 4: LABORATÓRIO DE IA GENERATIVA & CURADORIA -->
+                        <div class="p-3 bg-body-tertiary rounded-3 border mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-success text-white">4. Engenharia de Prompts &amp; Curadoria de IA
+                                    (Seção 2.5 &amp; 2.6)</span>
+                                <button class="btn btn-sm btn-outline-success py-0 px-2" style="font-size:0.7rem;"
+                                    onclick="generateAiAssetPreset()">Sintetizar Prompt</button>
+                            </div>
+
+                            <div class="row g-2 mb-2 small">
+                                <div class="col-md-6">
+                                    <label class="form-label text-secondary mb-0" style="font-size:0.7rem;">Prompt
+                                        Técnico Positivo</label>
+                                    <input type="text" class="form-control form-control-sm mono text-info"
+                                        id="aiPromptPos"
+                                        value="industrial factory conveyor belt, clean 2D animation background, ghibli aesthetic, flat colors --ar 16:9">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-secondary mb-0" style="font-size:0.7rem;">Prompt
+                                        Negativo (Mitigação de Anomalias)</label>
+                                    <input type="text" class="form-control form-control-sm mono text-danger"
+                                        id="aiPromptNeg"
+                                        value="deformed hands, extra limbs, photorealistic, noise, blur, watermark, text">
+                                </div>
+                            </div>
+
+                            <div class="p-2 rounded bg-dark border small">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <strong class="text-white" style="font-size:0.75rem;"><i
+                                            class="bi bi-search me-1"></i> Inspeção de Curadoria (Evitar Uncanny
+                                        Valley):</strong>
+                                    <span class="badge bg-secondary mono" style="font-size:0.65rem;">Denoising: 0.35 |
+                                        Seed: 49201</span>
+                                </div>
+                                <p class="text-secondary mb-0" style="font-size:0.72rem;">
+                                    ✓ <em>Inpainting aplicado nas bordas</em> para remover ruídos. Aprovado para
+                                    intervenção de <strong>over-painting</strong> no software vetorial.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- FERRAMENTA 5: QUIZ INTERATIVO COM AS 10 QUESTÕES DA APOSTILA -->
+                        <div class="p-3 bg-body-tertiary rounded-3 border mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-secondary text-white">5. Fixação do Conhecimento (Questões da
+                                    Apostila)</span>
+                                <span class="badge bg-dark border mono text-warning" id="quizScoreText">Score: 0 /
+                                    3</span>
+                            </div>
+
+                            <!-- Questão 1 (Baseada na questão 1 da apostila) -->
+                            <div class="quiz-card">
+                                <p class="small text-white fw-bold mb-2">1. Como classificar múltiplos arquivos de
+                                    assets sem identificação para garantir uso correto no projeto?</p>
+                                <div class="form-check small mb-1">
+                                    <input class="form-check-input" type="radio" name="q1" id="q1a" value="a">
+                                    <label class="form-check-label text-secondary" for="q1a">Separar aleatoriamente por
+                                        ordem de chegada na mesma pasta de downloads.</label>
+                                </div>
+                                <div class="form-check small">
+                                    <input class="form-check-input" type="radio" name="q1" id="q1b" value="b">
+                                    <label class="form-check-label text-secondary" for="q1b">Categorizar por tipo
+                                        (raster, vetor, áudio), resolução, licença e aplicar taxonomia de
+                                        nomenclatura.</label>
+                                </div>
+                                <div id="feedQ1" class="mt-2 small d-none"></div>
+                            </div>
+
+                            <!-- Questão 2 (Baseada na questão 2 da apostila) -->
+                            <div class="quiz-card">
+                                <p class="small text-white fw-bold mb-2">2. Para imprimir um logotipo em uma fachada de
+                                    3 metros, qual formato é tecnicamente adequado?</p>
+                                <div class="form-check small mb-1">
+                                    <input class="form-check-input" type="radio" name="q2" id="q2a" value="a">
+                                    <label class="form-check-label text-secondary" for="q2a">SVG / Vetorial: mantém
+                                        precisão geométrica por equações matemáticas sem pixelização.</label>
+                                </div>
+                                <div class="form-check small">
+                                    <input class="form-check-input" type="radio" name="q2" id="q2b" value="b">
+                                    <label class="form-check-label text-secondary" for="q2b">JPEG padrão web: basta
+                                        redimensionar na tela para ganhar nitidez.</label>
+                                </div>
+                                <div id="feedQ2" class="mt-2 small d-none"></div>
+                            </div>
+
+                            <!-- Questão 3 (Baseada na questão 3 da apostila) -->
+                            <div class="quiz-card">
+                                <p class="small text-white fw-bold mb-2">3. Qual a taxa de amostragem padrão para áudio
+                                    em produções de vídeo e broadcast?</p>
+                                <div class="form-check small mb-1">
+                                    <input class="form-check-input" type="radio" name="q3" id="q3a" value="a">
+                                    <label class="form-check-label text-secondary" for="q3a">22.05 kHz em MP3 com
+                                        compressão máxima para economizar banda.</label>
+                                </div>
+                                <div class="form-check small">
+                                    <input class="form-check-input" type="radio" name="q3" id="q3b" value="b">
+                                    <label class="form-check-label text-secondary" for="q3b">48 kHz a 24-bit
+                                        (WAV/Broadcast), garantindo headroom dinâmico e sincronia.</label>
+                                </div>
+                                <div id="feedQ3" class="mt-2 small d-none"></div>
+                            </div>
+
+                            <button class="btn btn-sm btn-primary w-100 fw-bold" onclick="evaluateQuiz()">
+                                <i class="bi bi-check2-circle me-1"></i> Validar Respostas do Capítulo 2
+                            </button>
+                        </div>
+
+                        <!-- EXPORTAÇÃO DA FICHA TÉCNICA (BOM) -->
+                        <div class="d-flex justify-content-between align-items-center">
+                            <button class="btn btn-sm btn-outline-success" onclick="exportBOMJson()">
+                                <i class="bi bi-download me-1"></i> Baixar Ficha BOM (JSON)
+                            </button>
+                            <a href="index.html" class="btn btn-sm btn-primary">
+                                Concluir Módulo &amp; Voltar ao Lobby <i class="bi bi-check-lg ms-1"></i>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- MODAL DE CONFIGURAÇÃO DE IA -->
+    <div class="modal fade no-print" id="aiConfigModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content glass-card border-secondary-subtle">
+                <div class="modal-header border-secondary-subtle py-2">
+                    <h6 class="modal-title fw-bold text-white"><i class="bi bi-cpu text-info me-2"></i>Motor de
+                        Inteligência Artificial</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body small">
+                    <p class="text-secondary">O módulo opera com o motor heurístico local baseado na apostila. Se
+                        desejar conectar a um provedor real:</p>
+                    <div class="mb-2">
+                        <label class="form-label text-secondary mb-1">Provedor</label>
+                        <select class="form-select form-select-sm" id="aiProviderSelect" onchange="toggleApiKeyInput()">
+                            <option value="offline">Motor Heurístico Local (Offline / Grátis)</option>
+                            <option value="gemini">Google Gemini 1.5 Flash</option>
+                            <option value="openai">OpenAI GPT-4o-mini</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 d-none" id="apiKeyBox">
+                        <label class="form-label text-secondary mb-1">Chave da API</label>
+                        <input type="password" class="form-control form-control-sm mono" id="aiApiKeyInput"
+                            placeholder="sk-...">
+                    </div>
+                </div>
+                <div class="modal-footer border-secondary-subtle py-2">
+                    <button class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button class="btn btn-sm btn-primary" onclick="saveAIConfig()">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        /* ============================================================
+           1. CRONÔMETRO SINCRONIZADO E LAYOUT SWITCHER
+           ============================================================ */
+        function switchMode(mode) {
+            const colA = document.getElementById('colApostila');
+            const colS = document.getElementById('colStudio');
+            const btnSp = document.getElementById('btnModeSplit');
+            const btnRd = document.getElementById('btnModeReading');
+            const btnSt = document.getElementById('btnModeStudio');
+
+            [btnSp, btnRd, btnSt].forEach(b => b.classList.remove('active'));
+
+            if (mode === 'split') {
+                colA.className = 'col-xl-6 col-lg-6 d-block';
+                colS.className = 'col-xl-6 col-lg-6 d-block';
+                btnSp.classList.add('active');
+            } else if (mode === 'reading') {
+                colA.className = 'col-12 col-xl-9 mx-auto d-block';
+                colS.className = 'd-none';
+                btnRd.classList.add('active');
+            } else if (mode === 'studio') {
+                colA.className = 'd-none';
+                colS.className = 'col-12 col-xl-11 mx-auto d-block';
+                btnSt.classList.add('active');
+            }
+        }
+
+        function syncLessonTimer() {
+            const secs = parseInt(localStorage.getItem('animlab_timer') || '0');
+            const mins = Math.floor(secs / 60);
+            const remSecs = secs % 60;
+            const timerEl = document.getElementById('lessonTimer');
+            const badge = document.getElementById('currentPhaseBadge');
+            if (timerEl) timerEl.innerText = `${String(mins).padStart(2, '0')}:${String(remSecs).padStart(2, '0')}`;
+            if (badge) {
+                if (mins < 15) { badge.innerText = "1. Leitura (15m)"; badge.className = "badge bg-primary"; }
+                else if (mins < 25) { badge.innerText = "2. Inspeção (10m)"; badge.className = "badge bg-info text-dark"; }
+                else if (mins < 50) { badge.innerText = "3. Curadoria (25m)"; badge.className = "badge bg-warning text-dark"; }
+                else { badge.innerText = "4. Fixação (10m)"; badge.className = "badge bg-success"; }
+            }
+        }
+        setInterval(syncLessonTimer, 1000);
+        syncLessonTimer();
+
+        const scrollBox = document.getElementById('apostilaScrollBox');
+        const progressBar = document.getElementById('readingProgress');
+        if (scrollBox) {
+            scrollBox.addEventListener('scroll', () => {
+                const max = scrollBox.scrollHeight - scrollBox.clientHeight;
+                const pct = max > 0 ? (scrollBox.scrollTop / max) * 100 : 0;
+                progressBar.style.width = pct + '%';
+            });
+        }
+
+        /* ============================================================
+           2. INSPETOR TÉCNICO DE IMAGENS (CANVAS)
+           ============================================================ */
+        const inspCanvas = document.getElementById('inspectorCanvas');
+        const inspCtx = inspCanvas.getContext('2d');
+
+        function loadSampleAsset(type) {
+            inspCtx.clearRect(0, 0, inspCanvas.width, inspCanvas.height);
+
+            if (type === 'png_alpha') {
+                // Desenha personagem com fundo transparente
+                inspCtx.fillStyle = '#22d3ee';
+                inspCtx.beginPath(); inspCtx.arc(320, 150, 60, 0, Math.PI * 2); inspCtx.fill();
+                inspCtx.fillStyle = '#f472b6';
+                inspCtx.fillRect(260, 210, 120, 110);
+                document.getElementById('metaFormat').innerText = 'PNG';
+                document.getElementById('metaRes').innerText = '1920x1080 (HD)';
+                document.getElementById('metaAlpha').innerText = 'Sim (Transparente)';
+                document.getElementById('metaAlpha').className = 'text-success mono';
+                document.getElementById('metaComp').innerText = 'Lossless';
+            } else if (type === 'jpg_photo') {
+                // Preenche o fundo todo simulando foto sem canal alfa
+                inspCtx.fillStyle = '#1e293b';
+                inspCtx.fillRect(0, 0, inspCanvas.width, inspCanvas.height);
+                inspCtx.fillStyle = '#fbbf24';
+                inspCtx.beginPath(); inspCtx.arc(320, 180, 80, 0, Math.PI * 2); inspCtx.fill();
+                document.getElementById('metaFormat').innerText = 'JPEG';
+                document.getElementById('metaRes').innerText = '1920x1080';
+                document.getElementById('metaAlpha').innerText = 'Não (Opaco)';
+                document.getElementById('metaAlpha').className = 'text-danger mono';
+                document.getElementById('metaComp').innerText = 'Lossy (8-bit)';
+            } else if (type === 'svg_vector') {
+                // Vetor nítido
+                inspCtx.strokeStyle = '#34d399'; inspCtx.lineWidth = 6;
+                inspCtx.beginPath();
+                inspCtx.moveTo(200, 280); inspCtx.lineTo(320, 100); inspCtx.lineTo(440, 280); inspCtx.closePath();
+                inspCtx.stroke();
+                inspCtx.fillStyle = 'rgba(52, 211, 153, 0.3)'; inspCtx.fill();
+                document.getElementById('metaFormat').innerText = 'SVG (XML)';
+                document.getElementById('metaRes').innerText = 'Infinito (Curvas)';
+                document.getElementById('metaAlpha').innerText = 'Sim (Vetorial)';
+                document.getElementById('metaAlpha').className = 'text-success mono';
+                document.getElementById('metaComp').innerText = 'Paramétrico';
+            }
+        }
+
+        function handleAssetUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (evt) => {
+                const img = new Image();
+                img.onload = () => {
+                    inspCtx.clearRect(0, 0, inspCanvas.width, inspCanvas.height);
+                    const scale = Math.min(inspCanvas.width / img.width, inspCanvas.height / img.height);
+                    const w = img.width * scale, h = img.height * scale;
+                    inspCtx.drawImage(img, (inspCanvas.width - w) / 2, (inspCanvas.height - h) / 2, w, h);
+
+                    document.getElementById('metaFormat').innerText = file.name.split('.').pop().toUpperCase();
+                    document.getElementById('metaRes').innerText = `${img.width}x${img.height}`;
+                    document.getElementById('metaAlpha').innerText = file.type.includes('png') || file.type.includes('svg') ? 'Possível' : 'Não';
+                    document.getElementById('metaComp').innerText = file.size > 1000000 ? `${(file.size / 1048576).toFixed(1)} MB` : `${Math.round(file.size / 1024)} KB`;
+                };
+                img.src = evt.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        /* ============================================================
+           3. ESTAÇÃO SONORA & VISUALIZADOR DE WAVEFORM (WEB AUDIO)
+           ============================================================ */
+        const waveCanvas = document.getElementById('audioWaveCanvas');
+        const waveCtx = waveCanvas.getContext('2d');
+        let isAudioPlaying = false;
+        let audioTimer = 0;
+        let audioStem = 'music';
+
+        function drawWaveformLoop() {
+            waveCtx.clearRect(0, 0, waveCanvas.width, waveCanvas.height);
+            const w = waveCanvas.width, h = waveCanvas.height;
+
+            waveCtx.strokeStyle = 'rgba(148, 163, 184, 0.15)';
+            waveCtx.beginPath(); waveCtx.moveTo(0, h / 2); waveCtx.lineTo(w, h / 2); waveCtx.stroke();
+
+            if (isAudioPlaying) {
+                audioTimer += 0.05;
+                waveCtx.lineWidth = 2;
+                waveCtx.strokeStyle = audioStem === 'dialogue' ? '#22d3ee' : (audioStem === 'sfx' ? '#fbbf24' : '#f472b6');
+                waveCtx.beginPath();
+
+                for (let x = 0; x < w; x += 4) {
+                    let freq = audioStem === 'dialogue' ? 0.04 : (audioStem === 'sfx' ? 0.09 : 0.02);
+                    let amp = (Math.sin(x * freq + audioTimer * 4) * Math.cos(x * 0.01 + audioTimer)) * (h * 0.38);
+                    if (x === 0) waveCtx.moveTo(x, h / 2 + amp);
+                    else waveCtx.lineTo(x, h / 2 + amp);
+                }
+                waveCtx.stroke();
+            } else {
+                // Linha estática em repouso
+                waveCtx.strokeStyle = '#334155';
+                waveCtx.beginPath();
+                for (let x = 0; x < w; x += 8) {
+                    let amp = Math.sin(x * 0.05) * 8;
+                    waveCtx.lineTo(x, h / 2 + amp);
+                }
+                waveCtx.stroke();
+            }
+
+            requestAnimationFrame(drawWaveformLoop);
+        }
+        requestAnimationFrame(drawWaveformLoop);
+
+        function toggleAudioEngine() {
+            isAudioPlaying = !isAudioPlaying;
+            const btn = document.getElementById('btnAudioPlay');
+            btn.innerHTML = isAudioPlaying ? '<i class="bi bi-pause-fill"></i> Pausar Stems' : '<i class="bi bi-play-fill"></i> Tocar Amostra';
+        }
+
+        function setStemMode(stem) {
+            audioStem = stem;
+            isAudioPlaying = true;
+            document.getElementById('btnAudioPlay').innerHTML = '<i class="bi bi-pause-fill"></i> Pausar Stems';
+            const bpms = { dialogue: 'Diálogo (90 wpm)', sfx: 'Transient SFX', music: '128 BPM' };
+            document.getElementById('bpmDisplay').innerText = bpms[stem];
+        }
+
+        /* ============================================================
+           4. MATRIZ JURÍDICA & REGISTRO DE BOM
+           ============================================================ */
+        let bomList = [
+            { name: "PRJ_C02_IMG_BG_SALA_V01.png", format: "PNG 24-bit", license: "Royalty-Free", status: "Conforme" }
+        ];
+
+        function updateLicenseLogic() {
+            const lic = document.getElementById('licTypeSelect').value;
+            const model = document.getElementById('licModelSelect').value;
+            const usage = document.getElementById('licUsageSelect').value;
+            const box = document.getElementById('licenseAlertBox');
+
+            if (model === 'sim_sem') {
+                box.className = 'alert alert-danger border p-2 mb-2 small';
+                box.innerHTML = '<i class="bi bi-exclamation-triangle-fill text-danger me-1"></i> <strong>Risco de Litígio Crítico:</strong> Imagem com pessoas reconhecíveis SEM Model Release não pode ser usada!';
+            } else if (lic === 'CC_BY' && usage === 'comercial') {
+                box.className = 'alert alert-warning border p-2 mb-2 small';
+                box.innerHTML = '<i class="bi bi-info-circle-fill text-warning me-1"></i> <strong>Atenção:</strong> Licença CC-BY exige atribuição explícita nos créditos finais do vídeo.';
+            } else {
+                box.className = 'alert alert-success border p-2 mb-2 small';
+                box.innerHTML = '<i class="bi bi-check-circle-fill text-success me-1"></i> <strong>Conformidade Aprovada:</strong> Asset 100% legalizado para o pipeline de produção.';
+            }
+        }
+
+        function addAssetToBOM() {
+            const lic = document.getElementById('licTypeSelect').options[document.getElementById('licTypeSelect').selectedIndex].text;
+            const fmt = document.getElementById('metaFormat').innerText;
+            const newName = `PRJ_C02_ASSET_${Date.now().toString().slice(-4)}.${fmt.toLowerCase()}`;
+
+            bomList.push({ name: newName, format: fmt, license: lic.split(' ')[0], status: "Conforme" });
+            renderBOMTable();
+        }
+
+        function renderBOMTable() {
+            const tbody = document.getElementById('bomTableBody');
+            tbody.innerHTML = '';
+            bomList.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td><code>${item.name}</code></td><td>${item.format}</td><td>${item.license}</td><td><span class="badge bg-success">${item.status}</span></td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function exportBOMJson() {
+            const blob = new Blob([JSON.stringify(bomList, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `ficha_tecnica_assets_BOM.json`;
+            a.click();
+        }
+
+        /* ============================================================
+           5. IA GENERATIVA & SÍNTESE DE PROMPTS
+           ============================================================ */
+        function generateAiAssetPreset() {
+            document.getElementById('aiPromptPos').value = "cyberpunk laboratory interior, 2D vector style, vibrant neon accents, high readability, 48kHz sound stage --ar 16:9";
+            document.getElementById('aiPromptNeg').value = "blurry, photographic grain, compression artifacts, watermark, logo, deformed perspective";
+        }
+
+        /* ============================================================
+           6. QUIZ DAS 10 QUESTÕES DA APOSTILA
+           ============================================================ */
+        function evaluateQuiz() {
+            let score = 0;
+
+            // Q1
+            const q1 = document.querySelector('input[name="q1"]:checked');
+            const f1 = document.getElementById('feedQ1');
+            f1.classList.remove('d-none');
+            if (q1 && q1.value === 'b') {
+                score++;
+                f1.className = 'text-success small';
+                f1.innerHTML = '✓ <strong>Correto!</strong> Conforme a Seção 2.1, a organização por taxonomia e metadados evita perda de dados e retrabalho.';
+            } else {
+                f1.className = 'text-danger small';
+                f1.innerHTML = '✗ <strong>Incorreto!</strong> Projetos profissionais exigem categorização por tipo, licença e padrão de nomenclatura.';
+            }
+
+            // Q2
+            const q2 = document.querySelector('input[name="q2"]:checked');
+            const f2 = document.getElementById('feedQ2');
+            f2.classList.remove('d-none');
+            if (q2 && q2.value === 'a') {
+                score++;
+                f2.className = 'text-success small';
+                f2.innerHTML = '✓ <strong>Correto!</strong> O formato SVG vetorial utiliza equações de Bézier com escalabilidade infinita sem pixelização.';
+            } else {
+                f2.className = 'text-danger small';
+                f2.innerHTML = '✗ <strong>Incorreto!</strong> JPEGs em outdoors de 3m sofrem pixelização severa.';
+            }
+
+            // Q3
+            const q3 = document.querySelector('input[name="q3"]:checked');
+            const f3 = document.getElementById('feedQ3');
+            f3.classList.remove('d-none');
+            if (q3 && q3.value === 'b') {
+                score++;
+                f3.className = 'text-success small';
+                f3.innerHTML = '✓ <strong>Correto!</strong> 48 kHz / 24-bit é o padrão mandatório para sincronia em vídeo e broadcast.';
+            } else {
+                f3.className = 'text-danger small';
+                f3.innerHTML = '✗ <strong>Incorreto!</strong> O padrão para broadcast é 48 kHz / 24-bit.';
+            }
+
+            document.getElementById('quizScoreText').innerText = `Score: ${score} / 3`;
+        }
+
+        /* ============================================================
+           7. CONFIGURAÇÃO DE IA
+           ============================================================ */
+        function toggleApiKeyInput() {
+            const p = document.getElementById('aiProviderSelect').value;
+            document.getElementById('apiKeyBox').classList.toggle('d-none', p === 'offline');
+        }
+
+        function saveAIConfig() {
+            const p = document.getElementById('aiProviderSelect').value;
+            const k = document.getElementById('aiApiKeyInput').value.trim();
+            localStorage.setItem('animlab_ai_provider', p);
+            localStorage.setItem('animlab_ai_key', k);
+            document.getElementById('aiStatusBadge').innerText = p === 'offline' ? 'IA: Local' : `IA: ${p.toUpperCase()}`;
+            bootstrap.Modal.getInstance(document.getElementById('aiConfigModal')).hide();
+        }
+
+        // Inicialização
+        window.addEventListener('DOMContentLoaded', () => {
+            loadSampleAsset('png_alpha');
+            renderBOMTable();
+        });
+    </script>
+</body>
+
+</html>
